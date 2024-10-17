@@ -44,6 +44,18 @@ function App() {
     setNotes(newNotes); 
   };
 
+  // const [selectedNote, setSelectedNote] = useState<Note>(initialNote);
+
+  const editNoteHandler = (noteId: number, updatedField: Partial<Note>) => {
+    const newNotes = notes.map(note => {
+      if (note.id == noteId) {
+        return { ...note, ...updatedField };
+      }
+      return note;
+    });
+    setNotes(newNotes);
+  };
+
 
   
   return (
@@ -52,6 +64,7 @@ function App() {
     	<div>
       	<input
         	placeholder="Note Title"
+          value={createNote.title}
         	onChange={(event) =>
           	setCreateNote({ ...createNote, title: event.target.value })}
         	required>
@@ -60,6 +73,7 @@ function App() {
 
     	<div>
       	<textarea
+          value={createNote.content}
         	onChange={(event) =>
           	setCreateNote({ ...createNote, content: event.target.value })}
         	required>
@@ -68,6 +82,7 @@ function App() {
 
   <div>
      	<select
+        value={createNote.label}
        	onChange={(event) =>
          	setCreateNote({ ...createNote, label: event.target.value as Label })}
        	required>
@@ -81,37 +96,55 @@ function App() {
     	<div><button type="submit">Create Note</button></div>
   	</form>
 
-
-      {/* Displaying the list of notes */}
-      <div className="notes-grid">
+    {/* Displaying the list of notes */}
+    <div className="notes-grid">
         {notes.map((note) => (
-          <div
-            key={note.id}
-            className="note-item">
+          <div key={note.id} className="note-item">
             <div className="notes-header">
-            <button onClick={() => deleteNoteHandler(note.id)}>x</button>
+              <button onClick={() => deleteNoteHandler(note.id)}>x</button>
               <button onClick={() => clickFavorite(note.title)}>
                 {favorite.includes(note.title) ? "❤️" : "🤍"}
               </button>
             </div>
-            <h2>{note.title}</h2>
-            <p>{note.content}</p>
-            <p>{note.label}</p>
+
+            {/* Editing notes */}
+            <h2
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              onBlur={(e) => editNoteHandler(note.id, { title: e.target.innerText })}
+            >
+              {note.title}
+            </h2>
+            <div
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              onBlur={(e) => editNoteHandler(note.id, { content: e.target.innerText })}
+            >
+              {note.content}
+            </div>
+            <p
+              contentEditable="true"
+              suppressContentEditableWarning={true}
+              onBlur={(e) => editNoteHandler(note.id, { label: e.target.innerText as Label })}
+            >
+              {note.label}
+            </p>
           </div>
         ))}
       </div>
 
-       {/* Favorite Note List Display */}
-       <div className="favorites-list">
+      {/* Favorite Note List Display */}
+      <div className="favorites-list">
         <h2>Favorite Notes</h2>
         <ul>
-          {/* favorite is an array */}
           {favorite.map((favoriteTitle) => {
-            const favoriteList = dummyNotesList.find(note => note.title === favoriteTitle);
+            const favoriteList = notes.find(note => note.title === favoriteTitle);
             return favoriteList ? <li key={favoriteTitle}>{favoriteList.title}</li> : null;
           })}
         </ul>
       </div>
+
+      
 
       {/* Toggle button for switching to light or dark mode */}
       <button 
@@ -130,4 +163,3 @@ function App() {
 }
 
 export default App;
-
