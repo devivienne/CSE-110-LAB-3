@@ -7,6 +7,9 @@ import { dummyNotesList } from "./constants"; // Import the dummyNotesList from 
 
 import { useState } from 'react';
 
+//lab3 stuff
+import { StickyNotes } from "./stickyNotes";
+
 function App() {
 
   const { favorite, clickFavorite } = useListFavorite();
