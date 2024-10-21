@@ -19,3 +19,19 @@ test("items in list on screen", () =>{
 
 });
 
+test("number of items displays in title correctly", () =>{
+    render(<ToDoList />);
+
+    dummyGroceryList.forEach(item => {
+        const listItem = screen.getByText(item.name);
+        fireEvent.click(listItem);
+    });
+
+    const purchasedItemsCount = screen.getByText(/Items bought:/); 
+    const numberOfCheckedItems = dummyGroceryList.filter(item => item.isPurchased).length;
+    expect(purchasedItemsCount).toHaveTextContent(`Items bought: ${numberOfCheckedItems}`);
+
+
+});
+
+
