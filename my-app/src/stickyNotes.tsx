@@ -73,7 +73,7 @@
 //             </input>
 //           </div>
   
-      /*    <div>
+ /*         <div>
             <textarea
             placeholder="Note Content"
             value={createNote.content}
